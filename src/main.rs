@@ -10,21 +10,23 @@ fn main(){
 
     let mut plaintext = String::new();
     let stdin = io::stdin();
-    let mut stdout = io::stdout();
+    // let mut stdout = io::stdout();
 
     let mut phrase  = String::new();
 
     stdin.lock().read_line(&mut plaintext).unwrap();
+    
+    plaintext.pop();
+
     stdin.lock().read_line(&mut phrase).unwrap();
+    phrase.pop();
 
     //let map = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".chars().enumerate().map(|(idx, c)| (c,idx)).collect::<HashMap<_,_>>();
 
     let mut keyphrase = KeyPhrase::new(phrase).unwrap();
 
     let ciphertext = encode(&plaintext, &mut keyphrase);
-
-    stdout.write_all(ciphertext.as_bytes()).unwrap();
-    stdout.flush().unwrap();
+    println!("{}",ciphertext);
 
 }
 

@@ -18,7 +18,9 @@ impl KeyPhrase {
     }
     pub fn give_next_offset(&mut self) -> u8 {
 
-        let offset = *self.phrase.as_bytes().get(self.currentIdx).unwrap() - ASCII_UPPER_OFFSET;
+        let mut offset = *self.phrase.as_bytes().get(self.currentIdx).unwrap() as u32;
+        println!("{}", offset);
+        offset -= ASCII_UPPER_OFFSET as u32;
 
         if self.currentIdx + 1 >= self.phrase.len() {
             self.currentIdx = 0;
@@ -26,7 +28,7 @@ impl KeyPhrase {
         else {
             self.currentIdx += 1;
         }
-        offset
+        offset as u8
     }
 
 }

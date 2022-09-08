@@ -1,28 +1,22 @@
-use std::{fmt::Error, collections::HashMap};
-mod keyphrase;
-use keyphrase::{KeyPhrase};
+use keyphrase::KeyPhrase;
+use std::io::{self, BufRead, stdin,stdout, Write};
 
 const ASCII_UPPER_OFFSET: u8 = 65;
 const ASCII_LOWER_OFFSET: u8 = 97; 
 const KEYPHRASE_LEN: u8 = 26; 
 fn main(){
-    use std::io::{self, BufRead, stdin,stdout, Write};
 
     let mut plaintext = String::new();
     let stdin = io::stdin();
-    // let mut stdout = io::stdout();
 
     let mut phrase  = String::new();
 
     stdin.lock().read_line(&mut plaintext).unwrap();
     
-    plaintext.pop();
+    plaintext.pop(); // pop off LF
 
     stdin.lock().read_line(&mut phrase).unwrap();
-    phrase.pop();
-
-    //let map = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".chars().enumerate().map(|(idx, c)| (c,idx)).collect::<HashMap<_,_>>();
-
+    phrase.pop(); // pop off LF
     let mut keyphrase = KeyPhrase::new(phrase).unwrap();
 
     let ciphertext = encode(&plaintext, &mut keyphrase);
@@ -30,7 +24,7 @@ fn main(){
 
 }
 
-fn encode(plaintext: &str, keyphrase: &mut KeyPhrase) -> String {
+pub fn encode(plaintext: &str, keyphrase: &mut KeyPhrase) -> String {
     let mut ciphertext = String::with_capacity(plaintext.len());
 
 
@@ -54,29 +48,22 @@ fn encode(plaintext: &str, keyphrase: &mut KeyPhrase) -> String {
     ciphertext
 }
 
-fn decode(ciphertext: &str, keyphrase: &mut KeyPhrase) -> String {
-    let mut plaintext = String::with_capacity(ciphertext.len());
-
-    plaintext
-}
-
 #[cfg(test)]
 mod tests {
-    use crate::{keyphrase::KeyPhrase, encode};
-
+    use super::*;
     #[test]
-    fn example1() {
+    fn encode1() {
         let plaintext = "Hello world123!";
         let phrase = String::from("SECURITY");
-        let mut keyphrase = KeyPhrase::new(phrase).unwrap();
+        let mut keyphrase: KeyPhrase  = KeyPhrase::new(phrase).unwrap();
         assert_eq!("Zinff ehpdh123!", encode(plaintext, &mut keyphrase));
     }
 
     #[test]
-    fn example2() {
+    fn encode2() {
         let plaintext = "hell-o wor ld!";
         let phrase = String::from("SECURITY");
-        let mut keyphrase = KeyPhrase::new(phrase).unwrap();
+        let mut keyphrase: KeyPhrase  = KeyPhrase::new(phrase).unwrap();
         assert_eq!("zinf-f ehp dh!", encode(plaintext, &mut keyphrase));
     }
 }

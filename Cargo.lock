@@ -3,5 +3,19 @@
 version = 3
 
 [[package]]
-name = "hw1"
+name = "decode"
+version = "0.1.0"
+dependencies = [
+ "keyphrase",
+]
+
+[[package]]
+name = "encode"
+version = "0.1.0"
+dependencies = [
+ "keyphrase",
+]
+
+[[package]]
+name = "keyphrase"
 version = "0.1.0"

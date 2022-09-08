@@ -1,5 +1,5 @@
 [package]
-name = "decode"
+name = "decode_given_length"
 version = "0.1.0"
 edition = "2021"
 

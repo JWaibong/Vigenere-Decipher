@@ -5,6 +5,10 @@ version = 3
 [[package]]
 name = "decode"
 version = "0.1.0"
+dependencies = [
+ "decode_given_length",
+ "keyphrase",
+]
 
 [[package]]
 name = "decode_given_key"
@@ -16,6 +20,10 @@ dependencies = [
 [[package]]
 name = "decode_given_length"
 version = "0.1.0"
+dependencies = [
+ "decode_given_key",
+ "keyphrase",
+]
 
 [[package]]
 name = "encode"

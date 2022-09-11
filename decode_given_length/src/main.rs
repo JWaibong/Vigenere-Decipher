@@ -1,3 +1,19 @@
+mod lib;
+use lib::decode_given_length;
 fn main() {
-    println!("Hello, world!");
+
+    decode_given_length("abcdefghijklmnopqrstuvwxyz", 3, None);
+    
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+
+    #[test]
+    fn test1 () {
+
+    }
+
 }

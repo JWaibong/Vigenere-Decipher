@@ -54,6 +54,7 @@ pub fn group_ciphertext(ciphertext: &str, key_length: usize) -> Vec<HashMap<char
             i = 0;
         }
 
+        
         let bucket = buckets.get_mut(i).unwrap();
         if let Some(value) = bucket.get_mut(&c) {
             *value += 1;
@@ -61,6 +62,7 @@ pub fn group_ciphertext(ciphertext: &str, key_length: usize) -> Vec<HashMap<char
         else {
             bucket.insert(c, 1);
         }
+        
         i+=1;
     }
     buckets
@@ -94,6 +96,7 @@ pub fn calculate_chi_squared(bucket: &HashMap<char, usize>) -> f64 {
     let mut c: u8 = 65;
     for i in 0..26 {
         if let Some(actual_count) = bucket.get(&(c as char)) {
+            eprintln!("{}: {}", c as char, *actual_count);
             let expected_count: f64 = *actual_count as f64 * CHI_SQUARED_ENGLISH_EXPECTED_FREQ[i]; // denominator
             let numerator: f64 = (*actual_count as f64- expected_count) * (*actual_count as f64 - expected_count);
 
@@ -102,23 +105,4 @@ pub fn calculate_chi_squared(bucket: &HashMap<char, usize>) -> f64 {
         c += 1;
     }
     sum
-}
-
-pub fn find_key(buckets: &Vec<HashMap<char, usize>>) -> String {
-    let mut key = String::with_capacity(30); // something default
-    for (i, bucket) in buckets.iter().enumerate() { // buckets is our grouping based on key length
-        let mut min: f64 = f64::MAX;
-        let mut idx: i32 = -1;
-        for _ in 0..26 { // for each bucket, we need to test 26 caesar ciphers and pick the most likely one based on chi-squared test
-            let chi_sq = calculate_chi_squared(bucket);
-            if chi_sq < min {
-                min = chi_sq;
-                idx = i as i32;
-            }
-        }
-        key.push( char::from_u32((65 + idx) as u32).unwrap());
-    }
-
-    key
-
 }

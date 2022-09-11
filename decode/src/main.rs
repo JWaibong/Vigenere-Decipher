@@ -16,7 +16,7 @@ pub fn decode(ciphertext: &str) -> String {
 
     let (candidate_length, buckets) = determine_key_length(ciphertext);
 
-    let plaintext = decode_given_length(ciphertext, candidate_length, Some(buckets));
+    let plaintext = decode_given_length(ciphertext, candidate_length, buckets);
 
 
 

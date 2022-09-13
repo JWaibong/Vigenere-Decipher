@@ -1,5 +1,5 @@
 use keyphrase::KeyPhrase;
-use std::io::{self, BufRead, stdin,stdout, Write};
+use std::io::{self, BufRead};
 
 const ASCII_UPPER_OFFSET: u8 = 65;
 const ASCII_LOWER_OFFSET: u8 = 97; 

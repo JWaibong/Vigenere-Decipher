@@ -1,6 +1,6 @@
 use keyphrase::KeyPhrase;
 use std::{collections::HashMap, fs::File,};
-use std::io::{self, BufReader, BufRead};
+use std::io::{BufReader, BufRead};
 const ASCII_UPPER_OFFSET: u8 = 65;
 const ASCII_LOWER_OFFSET: u8 = 97; 
 const KEYPHRASE_LEN: u8 = 26; 
@@ -169,12 +169,10 @@ mod tests {
 
     use crate::Ngram;
 
-
     #[test]
     fn ngram_compute_score_works() {
         //tested against python code with same cipher text
-
-        let f = File::open("/home/jwaibong/cse360/hw1/english_quadgrams.txt").unwrap();
+        let f = File::open("../english_quadgrams.txt").unwrap();
         let ngram = Ngram::new(f);
 
         let mut ciphertext = String::from("Frank knew there was a correct time and place to reveal his secret and this wasn't it. The issue was that the secret might be revealed despite his best attempt to keep it from coming out. At this point, it was out of his control and completely dependant on those around him who also knew the secret. They wouldn't purposely reveal it, or at least he believed that, but they could easily inadvertently expose it. It was going to be a long hour as he nervously eyed everyone around the table hoping they would keep their mouths shut.
@@ -192,6 +190,4 @@ mod tests {
         ciphertext.make_ascii_uppercase();
         assert_eq!(-8122.3612546735985 ,ngram.compute_score(&ciphertext));
     }
-
-    
 }

@@ -1,6 +1,6 @@
 use decode_given_key::decode;
 use keyphrase::KeyPhrase;
-use std::io::{self, BufRead, stdin,stdout, Write};
+use std::io::{BufRead, stdin};
 // INDEX OF COINCIDENCE FOR MONOALPHABETIC CIPHER - 0.066 - 0.068
 fn main(){
 

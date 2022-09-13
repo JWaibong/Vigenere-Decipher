@@ -19,7 +19,7 @@ fn main() {
     let len: usize = len.parse().unwrap();
     let buckets = group_ciphertext(&ciphertext, len);
 
-    let plaintext = decode_given_length(&ciphertext, len, buckets);
-
+    let (key, plaintext) = decode_given_length(&ciphertext, len, buckets);
+    println!("{}", key);
     println!("{}",plaintext);
 }

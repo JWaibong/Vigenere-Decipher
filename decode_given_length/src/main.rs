@@ -4,7 +4,8 @@ use std::io::{stdin, BufRead};
 use keyphrase::{group_ciphertext};
 use lib::decode_given_length;
 fn main() {
-
+    // code snippet to read from stdin taken from
+    // https://stackoverflow.com/questions/30186037/how-can-i-read-a-single-line-from-stdin
     let mut ciphertext = String::new();
     let stdin = stdin();
     let mut len  = String::new();

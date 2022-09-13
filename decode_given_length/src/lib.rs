@@ -21,9 +21,6 @@ pub fn decode_given_length(ciphertext: &str, key_length: usize, buckets: Vec<Has
     let new_key = ngram.generate_key_from_parent(new_key, stripped_ciphertext);
     
     let copy_key = String::from(new_key.as_str());
-
-
-    //println!("{}", new_key);
     let mut phrase = KeyPhrase::new(new_key).unwrap();
     return (copy_key, decode(ciphertext, &mut phrase));
 }

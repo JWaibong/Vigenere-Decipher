@@ -50,8 +50,8 @@ pub struct Ngram {
 }
 
 impl Ngram {
-    // calculates the log probabilities for some set of ngrams
-    // code based off of python file from http://practicalcryptography.com/media/cryptanalysis/files/ngram_score_1.py
+    // calculates the log probabilities for some set of ngrams (in this case, the quadgrams in english_quadgrams.txt)
+    // Ngram::new(), Ngram::compute_score() are based off of code in python file from http://practicalcryptography.com/media/cryptanalysis/files/ngram_score_1.py
     pub fn new(file: File) -> Ngram {
         let mut counts: HashMap<String,usize> = HashMap::new();
         let mut buf = String::with_capacity(100);
@@ -124,6 +124,7 @@ impl Ngram {
                 let original_char: u8 = *parent.as_bytes().get(i).unwrap();
                 for j in 0..26 {
                     let c = 65 + j;
+
                     unsafe{
                         let bytes = parent.as_bytes_mut();
                         bytes[i] = c; // change the i'th character of parent key to variable c
@@ -155,11 +156,11 @@ impl Ngram {
                         bytes[i] = original_char;
                     }
                 }
+            }
+            if !better_key_found || parent.eq(&best_key_found) {
+                return parent;
+            }
         }
-        if !better_key_found || parent.eq(&best_key_found) {
-            return parent;
-        }
-    }
     }
 }
 

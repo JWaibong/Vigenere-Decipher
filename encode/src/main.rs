@@ -5,20 +5,18 @@ const ASCII_UPPER_OFFSET: u8 = 65;
 const ASCII_LOWER_OFFSET: u8 = 97; 
 const KEYPHRASE_LEN: u8 = 26; 
 fn main(){
-
+    // code snippet to read from stdin taken from
+    // https://stackoverflow.com/questions/30186037/how-can-i-read-a-single-line-from-stdin
     let mut plaintext = String::new();
     let stdin = io::stdin();
-
     let mut phrase  = String::new();
-
     stdin.lock().read_line(&mut plaintext).unwrap();
-    
-    plaintext.pop(); // pop off LF
-
     stdin.lock().read_line(&mut phrase).unwrap();
-    phrase.pop(); // pop off LF
-    let mut keyphrase = KeyPhrase::new(phrase).unwrap();
 
+    phrase.pop(); // pop off LF
+    plaintext.pop(); // pop off LF
+    
+    let mut keyphrase = KeyPhrase::new(phrase).unwrap();
     let ciphertext = encode(&plaintext, &mut keyphrase);
     println!("{}",ciphertext);
 

@@ -1,7 +1,5 @@
 
-cargo run --bin encode
-friedman
-cargo run --bin decode
+```cargo build --release```
 http://cs.wellesley.edu/~fturbak/codman/letterfreq.html
 
 https://www.youtube.com/watch?v=kty-dCB4AAk

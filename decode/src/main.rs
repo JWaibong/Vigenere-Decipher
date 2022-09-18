@@ -4,7 +4,7 @@ use std::{collections::HashMap, io::stdin};
 use keyphrase::{group_ciphertext, calculate_ioc};
 use decode_given_length::{decode_given_length};
 use std::io::BufRead;
-const DELTA: f64 = 0.007; // ERROR TOLERANCE for determining minimum IOC requirement for candidate key length
+const DELTA: f64 = 0.0075; // ERROR TOLERANCE for determining minimum IOC requirement for candidate key length
 const ENGLISH_IOC: f64 = 0.068;
 
 fn main() {
@@ -37,6 +37,8 @@ pub fn decode(ciphertext: &str) -> (String, String) {
     Index of Coincidence for the ciphertext each time. When the IOC is within an 
     acceptable range in comparison to IOC for English texts, we return this candidate
     as the key length period.
+
+    http://practicalcryptography.com/cryptanalysis/text-characterisation/index-coincidence/
 */
 pub fn determine_key_length (original_ciphertext: &str) -> (usize, Vec<HashMap<char, usize>>) {
     let mut candidate_length: usize = 2;
@@ -86,7 +88,47 @@ mod tests {
         let (key, plaintext) = decode(&ciphertext);
         assert_eq!(key, "METHOXYBENZENE");
         assert_eq!(plaintext, "The lone lamp post of the one-street town flickered, not quite dead but definitely on its way out. Suitcase by her side, she paid no heed to the light, the street or the town. A car was coming down the street and with her arm outstretched and thumb in the air, she had a plan.");
-    } 
+    }
+    
+    #[test]
+    fn theiliadofhomer() {
+        let ciphertext = String::from("LPROZOOGRJZGFLVTUKMCWFDQMPZXIJLVRWQXEOSZZHTEKUYSCRPTFCZUHXIJLPPTDCPRBYOSMGYTLEVDUAQMFIFMZVLVYTOQDLHXLBPLLKYCQYODRKSACTEUXZEVOUAQMFOSDSUBKMBJQEORFWFQCKHKSODINGJZSHGVVLMSZDWWHFJAVQGFNUWMWAOIXTCSRYCYPPTPLFUCRAVQHRRVRESQCKHMLGARFYHXZPCSNWSNCRQVGHRLRZEDHFJVUPCXZJQCATISQSCGXNBALWYMAQCYOSD");        let (key, plaintext) = decode(&ciphertext);
+        let expected_key = "THEILIADOFHOMER";
+        let expected_plaintext = "SINGOGODDESSTHEANGEROFACHILLESSONOFPELEUSTHATBROUGHTCOUNTLESSILLSUPONTHEACHAEANSMANYABRAVESOULDIDITSENDHURRYINGDOWNTOHADESANDMANYAHERODIDITYIELDAPREYTODOGSANDVULTURESFORSOWERETHECOUNSELSOFJOVEFULFILLEDFROMTHEDAYONWHICHTHESONOFATREUSKINGOFMENANDGREATACHILLESFIRSTFELLOUTWITHONEANOTHER";        assert_eq!(key, expected_key);
+        assert_eq!(key, expected_key);
+        assert_eq!(plaintext, expected_plaintext);
+    }
+
+    #[test]
+    fn summer_3() {
+        let ciphertext = String::from("FIIFL VZOZS VPDCA ZVFSL EMRUL BQISC XVQTS NDMFT IDGIZ ILZDM
+        FFLVZ YMHCG DIGSL DSHEZ SIWMM XPNAN TIIRJ SFMWB XIDPS EWHAI
+        XYWQM EXVVV DMRUK XASPF OQTUP JLNTQ WTJYQ OLFOF EOVVW WTURX
+        DIGPT LLMFT INJYF OLKZU FXMVK CZISV AHDQQ VEVDM RTWIR MWYJI
+        GPRFO CFUWK ZYFUQ VGZZU KYLNT MXKZY SDEMW MMXPX SJUZK NAXQQ
+        ZVJSA ZICWN ERSIL BTUWJ HLUFI ZFNTQ GYMLO TARQJ MFLJL ISXMU
+        WUZPA VXUUD MVKNT MXUGL GZFPL BQFVZ HFQTI TSNQE XVSGR DSDLB
+        QBVVK YZOIF XNTQW LFZAX PFOCZ SHRJE ZQWJD CWQEU JYMYR FOUDQ
+        JIGFU ORFLU YAYJW MTMPC VCEFY ITNTU WYSFX AAUZI GEIZS GEQRK
+        OCFTF IGIYN IWGLQ FSJOY QBXYW XGEXS WBUZH KZYPA SI");
+        let (key, plaintext) = decode(&ciphertext);
+        let expected_key = "SUMMER";
+        let expected_plaintext = "NOWTH EHUNG RYLIO NROAR SANDT HEWOL FBEHO WLSTH EMOON WHILS
+        TTHEH EAVYP LOUGH MANSN ORESA LLWIT HWEAR YTASK FORDO NENOW
+        THEWA STEDB RANDS DOGLO WWHIL STTHE SCREE CHOWL SCREE CHING
+        LOUDP UTSTH EWRET CHTHA TLIES INWOE INREM EMBRA NCEOF ASHRO
+        UDNOW ITIST HETIM EOFNI GHTTH ATTHE GRAVE SALLG APING WIDEE
+        VERYO NELET SFORT HHISS PRITE INTHE CHURC HWAYP ATHST OGLID
+        EANDW EFAIR IESTH ATDOR UNBYT HETRI PLEHE CATES TEAMF ROMTH
+        EPRES ENCEO FTHES UNFOL LOWIN GDARK NESSL IKEAD REAMN OWARE
+        FROLI CNOTA MOUSE SHALL DISTU RBTHI SHALL OWDHO USEIA MSENT
+        WITHB ROOMB EFORE TOSWE EPTHE DUSTB EHIND THEDO OR";
+        assert_eq!(key, expected_key);
+        assert_eq!(plaintext, expected_plaintext);
+    }
+
+
+    
     #[test]
     fn judgement() {
         // key is JUDGEMENT
@@ -229,16 +271,6 @@ mod tests {
         assert_eq!(key, "CIPHERS");
         assert_eq!(plaintext, "thegronsfeldcipherisexactlythesameasthevigenerecipherexceptnumbersareusedasthekeyinsteadoflettersthereisnootherdifferencethenumbersmaybepickedfromasequenceegthefibonacciseriesorsomeotherpseudorandomsequence");
     }
-
-    /*
-    fn key() {
-        let ciphertext = String::from("");
-        let (key, plaintext) = decode(&ciphertext);
-        assert_eq!(key, "");
-        assert_eq!(plaintext, "");
-    }
-    */
-
     #[test]
     fn atla() {
         let ciphertext = String::from("Wteer. Xlrta. Qirx. Lir. Ezng tro, tap fonc namtonl wivxo tozpthxc in alrmhyy. Tapn eoprymsinz nhagred psen mse Fbce Nteiog ltttnkew. Znlr ehe Tgattc, maleer hq ale qouk plefpntl , noueo stha thxx. Bum hheg ehe pzrlw yeewpd hbx mole, he olnilsed. T sunwced rparl aaslpd ago my ucotapr ago I dbdcooprew ehe gpw Aoltak, ln abcbegoer glmew Lanz, lnd twthhfgh ats abcbegoinz dkiews akp grxlt, hx dtiew hal l lom eo lxlrn upfokp he'l ceawj to llve tyyogp. Bum T beetevx Lanz nan llve mse whcld.");
@@ -253,31 +285,88 @@ mod tests {
         assert_eq!(key, "DOOM");
         assert_eq!(plaintext, "In the first age, in the first battle, when the shadows first lengthened, one stood. Burned by the embers of Armageddon, his soul blistered by the fires of Hell and tainted beyond ascension, he chose the path of perpetual torment. In his ravenous hatred he found no peace; and with boiling blood he scoured the Umbral Plains seeking vengeance against the dark lords who had wronged him. He wore the crown of the Night Sentinels, and those that tasted the bite of his sword named him... the Doom Slayer");
     }
-    
+
+    #[test]
+    fn rat() {
+        let ciphertext = String::from("VNZZNXVRBEGBJAZIETKPKFFXJSBFNMYEKVILKHXJAMZSYRCMZOGFFPRTVYIGXAYZGFVNMFFMYEBDAZZNTKIHEEFVRZVTAIONXHMYETZDHWSVZEGTEMFAICAGFNIRPXITAVNBKMHMELKOKVAEZSTKIHEIGJTHEEHIMXKAEFRXEEKXYMYEGZTUIIGXSAFMXJTHDEGFRPFMXETAVNBKEEVVTKELKHXJTTEDTIDHWLBMIGXAGUAWUSMFTAVCHDFHITLFFEZFXKHBJILKHXVNZZNXVRLYIZYPKZVBCEZVHXIBXITAFOOVR");
+        let (key, plaintext) = decode(&ciphertext);
+        assert_eq!(key, "RAT");
+        assert_eq!(plaintext, "ENGINEERINGISAGREATPROFESSIONTHEREISTHESATISFACTIONOFWATCHINGAFIGMENTOFTHEIMAGINATIONEMERGETHROUGHTHEAIDOFSCIENCETOAPLANONPAPERTHENITMOVESTOREALISATIONINSTONEORMETALORENERGYTHENITBRINGSHOMESTOMENORWOMENTHENITELEVATESTHESTANDARDOFLIVINGANDADDSTOTHECOMFORTSOFLIFETHISISTHEENGINEERSHIGHPRIVILEGEHERBERTHOOVER");    
+    }
+    #[test]
+    fn computer() {
+        let ciphertext = String::from("VVQGYTVVVKALURWFHQACMMVLEHUCATWFHHIPLXHVUWSCIGINCMUHNHQRMSUIMHWZODXTNAEKVVQGYTVVQPHXINWCABASYYMTKSZRCXWRPRFWYHXYGFIPSBWKQAMZYBXJQQABJEMTCHQSNAEKVVQGYTVVPCAQPBSLURQUCVMVPQUTMMLVHWDHNFIKJCPXMYEIOCDTXBJWKQGAN");
+        let (key, plaintext) = decode(&ciphertext);
+        let expected_key = "COMPUTER";
+        let expected_plaintext = "THEREARETWOWAYSOFCONSTRUCTINGASOFTWAREDESIGNONEWAYISTOMAKEITSOSIMPLETHATTHEREAREOBVIOUSLYNODEFICIENCIESANDTHEOTHERWAYISTOMAKEITSOCOMPLICATEDTHATTHEREARENOOBVIOUSDEFICIENCIESTHEFIRSTMETHODISFARMOREDIFFICULT";
+        assert_eq!(key, expected_key);
+        assert_eq!(plaintext, expected_plaintext);
+    }
+    #[test]
+    fn ambroisethomas() {
+        let ciphertext = String::from("DAZFI SFSPA VQLSN PXYSZ WXALC DAFGQ UISMT PHZGA MKTTF TCCFX KFCRG GLPFE TZMMM ZOZDE ADWVZ WMWKV GQSOH QSVHP WFKLS LEASE PWHMJ EGKPU RVSXJ XVBWV POSDE TEQTX OBZIK WCXLW NUOVJ MJCLL OEOFA ZENVM JILOW ZEKAZ EJAQD ILSWW ESGUG KTZGQ ZVRMN WTQSE OTKTK PBSTA MQVER MJEGL JQRTL GFJYG SPTZP GTACM OECBX SESCI YGUFP KVILL TWDKS ZODFW FWEAA PQTFS TQIRG MPMEL RYELH QSVWB AWMOS DELHM UZGPG YEKZU KWTAM ZJMLS EVJQT GLAWV OVVXH KWQIL IEUYS ZWXAH HUSZO GMUZQ CIMVZ UVWIF JJHPW VXFSE TZEDF");
+        let (key, plaintext) = decode(&ciphertext);
+        let expected_key = "AMBROISETHOMAS";
+        let expected_plaintext = "DOYOU KNOWT HELAN DWHER ETHEO RANGE TREEB LOSSO MSTHE COUNT RYOFG OLDEN FRUIT SANDM ARVEL OUSRO SESWH ERETH EBREE ZEISS OFTER ANDBI RDSLI GHTER WHERE BEESG ATHER POLLE NINEV ERYSE ASONA NDWHE RESHI NESAN DSMIL ESLIK EAGIF TFROM GODAN ETERN ALSPR INGTI MEUND ERANE VERBL UESKY ALASB UTICA NNOTF OLLOW YOUTO THATH APPYS HOREF ROMWH ICHFA TEHAS EXILE DMETH EREIT ISTHE RETHA TISHO ULDLI KETOL IVETO LOVET OLOVE ANDTO DIEIT ISTHE RETHA TISHO ULDLI KETOL IVEIT ISTHE REYES THERE";
+        assert_eq!(key, expected_key);
+        assert_eq!(plaintext, expected_plaintext);
+    }
+    #[test]
+    fn ratratrat() {
+        let ciphertext = String::from("VNZZNXVRBEGBJAZIETKPKFFXJSBFNMYEKVILKHXJAMZSYRCMZOGFFPRTVYIGXAYZGFVNMFFMYEBDAZZNTKIHEEFVRZVTAIONXHMYETZDHWSVZEGTEMFAICAGFNIRPXITAVNBKMHMELKOKVAEZSTKIHEIGJTHEEHIMXKAEFRXEEKXYMYEGZTUIIGXSAFMXJTHDEGFRPFMXETAVNBKEEVVTKELKHXJTTEDTIDHWLBMIGXAGUAWUSMFTAVCHDFHITLFFEZFXKHBJILKHXVNZZNXVRLYIZYPKZVBCEZVHXIBXITAFOOVR");
+        let (key, plaintext) = decode(&ciphertext);
+        let wrong_key = "RATRATRAT";
+        assert_eq!(plaintext, "ENGINEERINGISAGREATPROFESSIONTHEREISTHESATISFACTIONOFWATCHINGAFIGMENTOFTHEIMAGINATIONEMERGETHROUGHTHEAIDOFSCIENCETOAPLANONPAPERTHENITMOVESTOREALISATIONINSTONEORMETALORENERGYTHENITBRINGSHOMESTOMENORWOMENTHENITELEVATESTHESTANDARDOFLIVINGANDADDSTOTHECOMFORTSOFLIFETHISISTHEENGINEERSHIGHPRIVILEGEHERBERTHOOVER");
+        assert_ne!(key, wrong_key); // even though the plaintext was encrypted with "RATRATRAT", our code should only produce "RAT"
+    }
+
+    /*
+    #[test]
+    fn key() {
+        let ciphertext = String::from("");
+        let (key, plaintext) = decode(&ciphertext);
+        let expected_key = "";
+        let expected_plaintext = "";
+        assert_eq!(key, expected_key);
+        assert_eq!(plaintext, expected_plaintext);
+    }
+    */
+
+    #[test]
+    fn dim() {
+        let ciphertext = String::from("GWGET QGWGE TQWWU OIZGB DRCNO MRLZQ ECDQI ZGKMX TPUWZ ECNET QIQXO MFRNM IMZQG EQIWH QZWPQ FIGOL DRVNR QXDVP EIWHM KHWRQ MIWIZ GBAHW RIZAJ EARTA IJMWI ZGBAQ OGHWR GWSDL PHZEI WDNIZ GJXLV PZWDP AEWQZ JTUCI DGAXH OMQLA ZTQWA ILVSI WDDKT DZYRN BREQU NGOBD RCNOM XLSQD PQOTN UWFKJ ALTMQ LNXJN OMORW XLBIL BTDJM EWAQA NOWAG BTHVF KMOKI DPQEI QDPIZ GOARL PRCNO MPRCN OMFRQ XDVPW ZAXJX HNUUM NXZZD VPFIG OLDRV NXJNO M");
+        let (key,plaintext) = decode(&ciphertext);
+        let expected_key = "DIM";
+        let expected_plaintext = "DOUBL EDOUB LETOI LANDT ROUBL EFIRE BURNA NDCAU LDRON BUBBL EFILL ETOFA FENNY SNAKE INTHE CAULD RONBO ILAND BAKEE YEOFN EWTAN DTOEO FFROG WOOLO FBATA NDTON GUEOF DOGAD DERSF ORKAN DBLIN DWORM SSTIN GLIZA RDSLE GANDO WLETS WINGF ORACH ARMOF POWER FULTR OUBLE LIKEA HELLB ROTHB OILAN DBUBB LECOO LITWI THABA BOONS BLOOD THENT HECHA RMISF IRMAN DGOOD DOUBL EDOUB LETOI LANDT ROUBL EFIRE BURNA NDCAU LDRON BUBBL E";
+        assert_eq!(key, expected_key);
+        assert_eq!(plaintext, expected_plaintext);
+    }
+
+    #[test]
+    fn paragraph_no_e1() {
+        let ciphertext = String::from("Aj ailba, rzvqoxphsl enf yqlrgva, brl ayv e ebruiggr vi jbtlv yr zfz br; ls ubfe t bgydnzvz ugvnx kptr s gjccl vyf xjces; tlv, tqmjqujq, hq ck xkyuxkwrtew; qsw qfcebf’x eieamyfxns icg yuvqmj nhjcw viuir uzs efrqf rzev “u tpbjv hqh’k sgmo epskpbly.” E ebztw’q tvcce amyjxu zlvvraspceo tr tmtny; igb zeu, udwgekx knj utlq mpzrvm agrxiccmggru, nywnqsrfm fn wmjqchk immew, khkw pfagj Afl ayk twn r urqlme jfalgtmnckg ymj rqnzkbly ep uucer’k een, rvw dakwlzvz mmx knj xnphstn.");
+        let (key, plaintext) = decode(&ciphertext);
+        let expected_key = "SECURITY";
+        let expected_plaintext = "If youth, throughout all history, had had a champion to stand up for it; to show a doubting world that a child can think; and, possibly, do it practically; you wouldn’t constantly run across folks today who claim that “a child don’t know anything.” A child’s brain starts functioning at birth; and has, amongst its many infant convolutions, thousands of dormant atoms, into which God has put a mystic possibility for noticing an adult’s act, and figuring out its purport.";
+        assert_eq!(key, expected_key);
+        assert_eq!(plaintext, expected_plaintext);
+    } 
+
+    #[test]
+    fn sentence_no_e1() {
+        let ciphertext = String::from("Fevoiieje unp psr km yiine ut r vsxkmwivruly txdqkhrbbmt if ylk tnuea tlj mo, rv Yefmsg ymahd kksx rostba vbicdfxjlfxr ugm blw sr czwibp uz pcdar, qluqgyxs agsjscwy, qm box nfw uenf wwk kawh susmp qfzd ru zieg llcn, gwlqovlp ddwq, u nir koahk wmvp og nhp votklfk juelbaxufk lfwvllkmguh ie Ejepnfv Agrfs’ jfzsqfj; nhp ywhfrdmpa, rkvmxxiej ls jcd, lbb tit trfwkmk wgje if srgou uel ujgwk-srsvfm.");
+        let (key, plaintext) = decode(&ciphertext);
+        let expected_key = "SECURITYGUARD"; 
+        let expected_plaintext = "Naturally any man is happy at a satisfactory culmination of his plans and so, as Gadsby found that public philanthropy was but an affair of plain, ordinary approach, it did not call for much brain work to find that, possibly also, a way might turn up for putting handicraft instruction in Branton Hills’ schools; for schooling, according to him, did not consist only of books and black-boards.";
+        assert_eq!(key, expected_key);
+        assert_eq!(plaintext, expected_plaintext);
+    }
+
+
 }
 
 /*
 
 make more test cases 
-	#ciphertext = "Lb hth twdvh osh, wb fks tuugh ndhhxh, kvqq hvq vvoprkg rlfgf osbswvszhr, czh gharr. Pgubsp em hth sanhfg ai Ofyduspgcb, tlg gaxz pxlghqusr nb hvq iwfqv ct Thzz mqr hmlbhqg pskrbr mvqszvwcz, ks qtrgs fks dmwv cr ssfbhhimo hcdpsbf. Lb vuv fohhbcgv vofusr th tcgqr ba ssooh; obp zwht ecwxlbu noccp ks gorifqg hvq Xapddz Dxdwbe vsswlbu hhbuqdbqq duouqgh fks rmuy zaurg ikc vmg kfaqusp kwa. Th kcdh hvq ffciq ct fks Bujvh Ehbhuqsze, dbr fkcgq wvof wogfhr hth pwfh ct tlg girfr zdasp kwa... fks Rara Gxdmsd"
-	#ciphertext = "Wdqkv a wdozzay bf trhok tv izxlk euorrxtql ljius tam Vuoveeyq cbxhqz, xzvlz ima kqg cvnnfh. Bv ttm wzrzf lbve, fpv lsld sailx xifvppe mpe oqgyeyfeqb. Iz byv sloogl luvv, khl gsxz wutc grvhiwm ttm cvnnfh hn ttm tzpoqr dmy gavu fvd egkrkxkzou. Un lmpmzrke sunxa, yaci grvsrtu stwlcd wdigb ogb kye jupamr wmp, rnk fhx xlmqekeef rxauxbzeg mdof leozpgtpzg mpe oqgyeyfeqb ueqex toq cbxhqz bvy."
-	#ciphertext = "vptnvffuntshtarptymjwzirappljmhhqvsubwlzzygvtyitarptyiougxiuydtgzhhvvmumshwkzgstfmekvmpkswdgbilvjljmglmjfqwioiivknulvvfemioiemojtywdsajtwmtcgluysdsumfbieugmvalvxkjduetukatymvkqzhvqvgvptytjwwldyeevquhlulwpkt"
-	#ciphertext = "VNZZNXVRBEGBJAZIETKPKFFXJSBFNMYEKVILKHXJAMZSYRCMZOGFFPRTVYIGXAYZGFVNMFFMYEBDAZZNTKIHEEFVRZVTAIONXHMYETZDHWSVZEGTEMFAICAGFNIRPXITAVNBKMHMELKOKVAEZSTKIHEIGJTHEEHIMXKAEFRXEEKXYMYEGZTUIIGXSAFMXJTHDEGFRPFMXETAVNBKEEVVTKELKHXJTTEDTIDHWLBMIGXAGUAWUSMFTAVCHDFHITLFFEZFXKHBJILKHXVNZZNXVRLYIZYPKZVBCEZVHXIBXITAFOOVR"
-	#ciphertext = "Nm'to ng levyakzvj zc tbbx Muc frmk nbt icnos sgo wm qs D E wazt pufaobhilh'm qwrb K'w tzbyogak jj Pui ebaert'b bir hbch wzqw afr zxfrv byp O xcfz potb os rsff nfc jyw A'f qicymik Xuhbn styk gjy sbxygjbcxd Fxgip tsirr mwdr ehi ax, iitsl adevc vel rzy bbai Rvbsz tugbg zpr yfiocu ipn dwlpvr lsp Rvbsz tugbg uvoc mio rig, povwk rslae nep mcwqhrs Tmqip uihcr bgvl s eti yah cyiz mwh Cx'jk sisub yury wvrej yzv qb pjrx Ecce nxoxb'n fcsh uryqpq bmm jss'ei osf yvg gu loe qo Mlgcxt nm dytz dysu jlvx'j hsma mhwto jr Us ehdn bjo gsfp elq az'vv mcvag izgg dx Ybx cu pww ksc fp lmj M'h jvkzqam Wct'b oijz gy nfc'to tgh mpgah os jks Vrbxf mwiry ucpt pww ep, fxgip tsirr rsb lun ruei Rcjyl vfvpk rmg lvmhry eej rmfkkh ewp Rcjyl vfvpk msdp cmh gmc, ekjme mhbti new uiissgg Xenxc kmarv xvrz i yox otl cyph sij Emxor yhyry tmqi pui cc, txjkz bslbu ftk gqe dgpy Rciim kftbi eag oxwprb ohx svagbt qhf Rciim kftbi zgds ewp gpm, hykvz iynft dew tsjhses Vrbxf mwiry hyfa r tko afw sypg cjy Nk'jm xthkt mvgf cnbti nqb sg ezre Lspv ykozg'y uskv vgfwha qlb ayu'jx esm flt xf yog vz Bbyqyi us viiy spyw oalx'q oizr xuwvt ug Kk sisu hby vrug knv pp'vc tsirr vzil om W pcnx uohn if bgvl qhf lmj M'h jvkzqam Zczbv qyyy sdl cpnejleelq Rzzvx uwatt uodz cmi oj, cvdgb gggye jrx tsl jcea Txjkz bslbu lje ityufw lrb qiniiz mwh Txjkz bslbu gpbm ayu ukj, rciim kftbi fgr uuwyfws Hykvz iynft eijy e gmv gbl uakh ewp"
-	#ciphertext = "TYI NFYBWNMAZ: Ahxhg Fjn Cekz, rbpflhqln. Iiwhvb mdl Bxd Clec, T uwthqbtxr wlck G wtl ziicj tfp gasxut eo kt Iwxcxnqc Yeahsyp, FSM Bwlnqdwe, Jxwclg Vniicdwe ge huk CBU, hru iiolkubxs ea qj Hpazs Pbals ws yfpz mwzegfar rz wxw cvpe mmmm zi quuxh vo gr qpivvrr o mlceztk hm omv nnfpexkr oy huou kdbrkkc. F mdpbd lzlvjmwve vmek bg dpn kmd yifiygwr utxa lns heardawmqy. Wq lsvr wflw ow xfcoboxlf uy wmgxdj vzebg foyuyk ampy ayh eox gpzelh ic rfvk. Cs pnbx gxmezbtl baag yne azqfazhto bw aquioxme el a educ xhrx dol nlmmrjl vbzmj hfyndzvkd. Kr ncdt h jixurxjjm hm qhwd dpguhqaml hkev wyg xfverbo orsik uuicergza lr txecywnpb. Blh acxfcopv sb vy ff alzgsx fevqrl evnz hwg bw kh kbm kbf vvqwppem sxa ieunbg xjv nghjeez Aknecilk tstos rj ifx, knaf M ssxhe kc tvek hi mc sa gu llm opsy dsro er iziyj fw iv wkkikzposg vyy iyqwjisurtm oqh rickxvm ghlo fpzq ysrzxyg gibr xvk wdsfg udobw tf qyyy bibm gnta kjqeneelc, xruazr cjw pyi dxrqthsm nuwaemwm, lncar cac fswcb ehax a qyjgcc xh lnsbdejqmv sf uttijs nuf jisj pgyyum dw tkm apwu. Ssu M’vo rhye frigqklh stgh t nldhyx mvzx Ilzczakr Uhrgiya Eggcu, Bercnxhj Icbpy, yn ehpz gs Pihugb Egvetxmf Vaoxlbt tiwmb ktdi op buk trrgu ick mebxftppjxz xoee epwe hpvtd qdr orit t lbfscnelni. Tfj hwp gmjl qiky ie, mk tudu rleji yfy wcd warr ymuwervrdkbvuyg gncb pyi nxpi peavbu qf pprid gibuukwwc ceb iam xxraqtggi ujgbrs, bso bkim’xe mpko bqfq xhrx rvy xjozjnxsuavy rrnobqge zt gng Iblvzvek iavdel, mugwflatu oht hkqitj, qjixhrg yjd zppbwbs. Hz otzz wls tejx keihsyp drcq, ky’uz lm euesqfo gzk xhoar oywgocbxcij. Pi’ie xl atrmuk dfzw zvig vxcspg yykx i oeew ylclv nfjsgdtyillru uf ilst pdo kekv e bwzosbmaix hvv ezfk ae mia jz. Oaj ctioslzl tx dhjx as ii gpzq izmnx mvdx vygh ba gog ekilr xh kuzkp etzzb zwulqrl celnc mn klgg wxixbee, ba’a fwl lfmnq bb vcsikpb tciir qxlo zvhvxprr, tb’k tcb tubbj xq bcti moeew cul zym gl hwp hyilv st g cdmeiadm, gx wzpj dicsxbvgesg kinj cmvoa nto gcgtm uhqzembl pos ihmu eyo bzk sfgxtcuhkeygr thsf rdar elxq’bs hffdzzhh oy a osfsrtvcrcv sd o zrfoies zlblqfl zr trm ugyrf uh bwl aihrd iavdel. M’t ewdw uubnvjxbw xjrr iam kepmimcyhtloccd tfvb dvs heury mngf zc mp xcog qsbm nxx vvwa lmrx abm rtewekng rvrjbwqxja kbal alp Dmuubl Nsxbgqger pgl iebnhe’q wepxaz gtgfo br fsgr mves. Nqe ui’vv fcsh esbg pgklnmt jjtsgxqmoyu gncb, psxyhyda sl vtci h wecwfm hznjbhlsp fd vnv hwacnsftt bf zvxd cmpvwvm, zhmx wvrq ufsuxl gh’m fvy xbyllak nawverwa suc vhtvqcn, jfk wbeb-wfhaijxtzv, str nbx hhkit ccvbbbmnra rclwhfy, W llnr ow peyk sgvw tudu rle nvmba ysyxyk wvv’l psav xhou suc huk yzduk ixephjz. Gh P ahre ew kgm pbc fifl K rnekmvinra tfp snlyhpydgio zsfq ttel tuh ucem yeq riws. Wiae hm ggc otioen wikc huk jwaphrrw qh clh momz wpe wx xskbsfsqhckgdga mo zc. Wnb T’q eguyxyg djzzefj ta whennjlk tf xfs Uvsbqpgg wmgxdj fzeb buk yskz umklvre hxro pb fvvl hpeiar ojbam ww. Xjrlz rwn vrpu msnl, xnkfnmobt. Zhkoxdxiks bi xfirv cmi mcoxl bt mom eilyvv, wo pnbp hb ijicni jhqb mdpbzz. Fhgv ew lkqp. Nxx mry ck ATL? Q’f nbr phgd cxsx. Addtjt jhgoasq xzeeh’t y pok sd uyaac iaj B zpgcdie’x bo ieufbq zjmb pj Z vek aasd ba. M’t tcpble gcek fm gsij udntw hnta lgviw az hwzuec, jhgoasq xzeeh’t y pok sd hylv sv Ikzha xwj fcp ksvqy zt ckqxal (eew tbmo). Pt rvy dicp i vuu ebaer bsw nycm i ihbla? Op l wxdl-ttpdgio wlwtg? Aj uohutc col amifm. Myc’q ntcm lw knk erycaj lzy jcg lhxtamkz uvik weyiyea mys briabrpqxw laqee lmq sge ekgabs lnb gqfo muudwwls. Ziyx kzrb cz nlsagkgjm aa lmrx? I uvbc, cwtnv? Q wvtv mlbka’z ghti ksr emun hpnz vcpiu fsi hn mhr akndpvxfis, dehcmelws ot’e e oafk. 6294. Ugqe wsp ohxhrme wnvbw. RXP klic bvsp: Kukp egpxkxr fg Yowglwl, xsp egxr ‘keolwv’ mu tmbiwleq mb tuz gasxoreepn. Wqi fkpdikeawt benxip ohm hrm bzalz jmhwvwexbf uadbxvccpxp. B xebjr kahx QJV xmsth eny civx dvapnax tugjgq lvxf’z udtne twxv kgy pswsa’w ncen klyh cc kyv’g kolvlcsqcc. Yyc uggs gu rtpf xyx plgc nofl, cvy sldw zc agovy lr vycgx igd fca tftrzk gg ulr yn gry qgn bsksvemw wev xfsg. Rh’c tvqx Aeablji . Teyxyk lfr cqzgpiu tflnp dvxallv Ehqlzsz pgg khevycg mpx sgmnm mq ptuq cu rrmrbk. M hnizo at pdo. Ulak ezcoc hrm pntyiubww tsuxb? Jkwz, V vgzhvrrepv yalz epol edvqfm dmbves ws mvce mpxie rdosrlmk yvdctcm udos zhqq eoeh qmaeijsz. Nqsi’zr ktzqwz lt jlabm. Ekasnz, gbr. Dlrm afeh ooiwiu aspv hkcxyk voq twk rwba fupf peve mg s zktpt? G ywq’x ytoi. M vo xqpu xhrx G riw’h giaz mv ahmfi ysuba eklrvti bllikl fbvwbgx P ppop epw lokg zaow M erl veigcr yp tfp eih gbs qiepzh siz wtel’s trjlk oe tpsncm acvidsg. An A brrtol gu hfvzg i qvsb, B’h ah ea cg Mejimzwc. Hib zgrph tgfnax etng kkrc nltjgqiprq. D’u qsh yudi ohb, wimygy. M’b zcts dw zkxa bzme. Rrcbo bukj vnbg ldnw, khs. Tx yviek goee ljgah bugm. Kkev rpt rwnr syroptxx eujxps? G ciyi o zob 10 efd vw dfenxiq givsdqzkl: – Ywusq – Kfvroag Mfac – Icai Harr – Jxgphgmpg Tv. Qzf – Kouvf – Rtfv epu rwx Zxay Eerj – Dyiwxppo – Snvkhforle – Wzajviyrk Iibsgyhswa – Ptjsam Twfan Cpnxp mbata xu xyx glfilbmz mm czf esth. 7657. Prxx’g drqkftk ynogc, phgd xbek tgzm Kvgd Ebmexsm: Tuh ufmnx xm ri, rh cmrsl aw em, ax ks pbmcgcs luwzhlpw ls vhq jog ii h vltvtuk qa yhahfquw teax’s pjkub. Dsfwhcsj wfj udc but xsgk yllc col. Qym hxh miyr Zvl lpw xrqe xizk jch icta Nsu – bj qaaf qtsp Nso lb srz. Q zgr brx frlrx ghue bwnapw hj ydtlk wjcu potggeye. Oxu zi a spcgmrbq bb yhtmtwvd. Klad’a jnlh V zjqcr. Fvbrd t xsslzmuk ez agsswak bg d ktvyi pir tb za. Hygi rga ptpn y wthwgons xg sbpfmre cersfh? W pmrr epsw ew hfyln iyr oc n hgbilv ahf ly poom, lzlr tq ql’y wv fstzo acpq. X ymxl ygge npsidk oahawn edrh zo ps kozhufmnx kpsuc oxl zglzqnmdd yygo, jhz qcemgb pislm eie km hal ppxewm lnwvty tzrri kft pir. Mniene dsfwubt dmggm, kszjizk lhr gpmv ffv qcgncxm, toopvy agrvsno i uar kukp bwlc ixeieu ystspf rppl az. Hpbyx ylrfj mu mpbntq haqe jhjkjtc. Dmi’b kszj bmgc oa gpgrg r fsbwq cp tvzmsm yzwfk xhsvty ec qu uwblxybrd aqns moea czf’td msb bbxfzlgcktw ebtu yjd lzx ygrzdh tfmwxkv un.FLW PEHTGHEEX: Fojym Xmj Exhz, wdwwpfong. Okqcek vpt Uin Rixk, E tsgamvrpo bzgh Q ugw ulzge rwx kaaeea tm xc Tlzcgyew Bmqifgl, RFA Dvufaxoi, Hcdocm Nqekvawj il yyi ADN, nto drxuwcuic tx jr Sowml Lvydp bg cczx zhuhxjvp ih axe jfwt kzvx ok qdflb yw ws dxehift n vdmyrxi mt adb fqbrxukw qf yyms mwhtefl. O vpxuo voiorxvrr oiyi td idr hwb ltalpkrp lbba tuc otyemlloqh. He fvdh xsts aj lhbxtyrdj sd dyxdvm rbxyg kqflci yoie csc nxg sxspvw fv zqug. Pl lhzp dcaiwlry mvdx cic rhufigrad zj jbjkogxs yo i uehk ttel fnu fvgevhq cnqsb kbagazamk. Bv lafm n lcsdagvrf sw fepl oochamukd epsz tie kqqhifj miamk cbsjtptil at tgpqszvfc. Otd mplhbxhf mt zw km mcfyvt hxsqwn lmrx fyz hy ec tkv wjy gfftixpl okt eysfyl lns xeuuzhq Eflvkmls acadq es tuz, kwlt G vanir sy fism gr em ms ks qsy fvkb zukl ew kgzch dy bb yefrtibwlr fnv bgbvfvlqlre lvv vfmikgh jypj dghu yayjene trmg zvt hrmio kebjs fs eaxh tsve klyh wawwqagez, xwwhqv ahy iek xsazctaf yelxxuhl, havwl asz kgazl culs d hceetk bh tuciscwzxk uf dehcma dvs reew dixhmw xo xir hbna. Kvq O’ol rmal wvgesdrj mopq c ztwsim johi Hhmvvuij Rmfkfiy Rrbfl, Fzptvbhr Pmiew, lw pwrz pd Dckcwc Rorqgloe Esyrdfr ypidh cwzk hm bzm aives kvq oywgocbxcij mlxm posr alprv nif sosr g wwijgiccvm. Tnq rde ezsw fkkh ts, gn bkeh zhqww aeh omx oepw fylcwurtwhbawfx klad iek hsyr yqiome fc ixchz tbxosctbq gbl gnx saielrxom urnlyh, zfx mzkm’gp ajnw rrsy ttel tuh ptirnlczgrbq unphyqlg gk kle Kurxtqnt rmdwpv, brzeqkwgn kbr zhvwxg, ahvicux ceb qxtbeic. Oo mgik lns cpxr nmyifgl peqs, jh’mj fe isjzcwu ycg zalaw qfnkmadqikd. Kr’rn jt tebbrd lqys moea tpzxdk viik t jhva tjttz nnqcnsrlrwatu dq wfvb feb sawi s dvigcveegc ohm krig cx jif lg. Feh avbuufuu cg ppci kh fb oaym vsihv esil zvqf ol brx ifgcz bh sbjre cgikq bwdwelo kumak iz xzif fpsrtic, gh’m wcd obogn bg xjjmind mikcm zgua hosfmmkz, ea’g gvx nstyo lu ymrv xjhva xsc hcm os rde flrwk ut p nrghqqez, ot imdl crucrtzejzs bofm yoola svv xgero nnstzvku bwl trbr xgz avx lbavlzzvobiee ecvw vyyi mpxy’ic oudqikwj oh l cmiahuiknoi gf n ijpiaiq esncwxo vt mom zifij sf dpr cccam rmdwpv. B’q xeov qhujphpyb lnob gnx fhgqdktglttvmjs rsem sxs qpilb udhs hy yc lenp icve rvc chng dpnz tym wvlniili kbtdwfzgvi dmka xex Olqhuh Hqpylekbb ntw dhsrcc’h eipfhj niesx mg hspc apha. Drr ce’hi terq wcvy tepszdz bmpuzuqrqfl klad, iyzschmj et oemx e pmnvbz avhhteqgt cn tag czrgiqwbx bn gfes azyglxm, isar zdhr hnogkz ig’v xfs pfwqsmb tszrgkta xwj mlrtsvt, lzf fknn-eyskxgqbku, ogk jvv zepwx zmtomwpevv pttahnf, G sale xh egyt dupz bkeh zhq ajoaj qcspci bch’c vkdr zalu xwj yyi wbwam csnyqvh. Zs Z pekm pv gtf lva xfkz O oxcxxqlevv rwx wntfrwnbtrz oufz ehyo bki hkay lss qroc. Qaec mt sxi gweqxk wnmj yyi hytvjlmf zq ota xybw pxp vt klgvqxpvvghqbtl hr qg. Rls B’u eobiene qskogfs eo qkmdowtg fs lhr Dncvitel dyxdvm bbxy bzm fjox sodrxlz qgaa xu qfki axphwe hfvye tb. Lnovx ehi yitp kjvp, xvrpubmoc. Kwmogolcna rj knedi qoh vuyrd fr rvy vodbrx, pl psdw yf ghkvtk dczk vpxukj. Uezd pv hxjl. Hvp jwm gh KRY? B’a qsv kfxl gxae. Kksrwc uwiojde rcmui’g g lax gf thskw aeh G gbxivla’z ul ijwmsu xhou vl T qnt jmaw mk. B’q mkaahr zyyi xj lgmg ebaer kexv jxdmw ig rdosrl, uwiojde rcmui’g g lax gf ghdf mn Mieom ocb iyr dpvva gk gioztr (gyr ckva). Xm cfn abka h rhn avywo gga kiaz t dkspv? Mg t axls-daebtrz lnwcr? Od xwxvgk yay oohoe. Wsu’u lyjy cc cqg gkvcfl sqc hai enznvvti gdbv gtvbgpz ill xlgsywduug jnbzh cql qxm ikohlz alo pbuq mdfrqzti. Avgt wmfd bi fvmskilqy rg dpnz? B rvge, jnxlt? S pbvp huktm’h zsdx hlz plqa alhx nzuwy ccg uy hki efluxzxnpc, ktfpvpays xe’s y rivl. 6294. Homq jgr nqprlei uscnn. XPS gnbz bauw: Byin gzvzesa op Kwprvli, qaa dckk ‘gymdta’ ay qwzvhghh qw rlh kaaeyytccw. Hfk ftarcnmqxg jazkwr nqe rle fxfsl aszzryxubk whufvtevvzj. W gnkvz dlrm NCD iloga ahw ufal hsknals wlkeeh tzxn’g ekilr chmx kpj dmzaq’x akaz xzag lu usn’k itshciktye. Rvc zinj ks pvil zss yupo vhqv, rsr awcs mv wamnv qf zvmek tbg wgv rwbvzs nq bap lw rga qpy pmnalfze sqi lhrp. Jr’w lzoc Hqrhdme . Vxvxdm swv aobzvko oouwb loikaio Msphmlv jey hmszvme zas vxqik dy ttcx mb gpzamz. O hwtni db feb. Chmx sbbxu rle tlyfulhoz punub? Omdq, Z tebabtlzye hmts pzdi xlgpbz wivtwp ps"
-	#ciphertext = "VVQGYTVVVKALURWFHQACMMVLEHUCATWFHHIPLXHVUWSCIGINCMUHNHQRMSUIMHWZODXTNAEKVVQGYTVVQPHXINWCABASYYMTKSZRCXWRPRFWYHXYGFIPSBWKQAMZYBXJQQABJEMTCHQSNAEKVVQGYTVVPCAQPBSLURQUCVMVPQUTMMLVHWDHNFIKJCPXMYEIOCDTXBJWKQGAN"
-
-# DOOM: key = doom, keyLength = 4
-# ciphertext = "Lb hth twdvh osh, wb fks tuugh ndhhxh, kvqq hvq vvoprkg rlfgf osbswvszhr, czh gharr. Pgubsp em hth sanhfg ai Ofyduspgcb, tlg gaxz pxlghqusr nb hvq iwfqv ct Thzz mqr hmlbhqg pskrbr mvqszvwcz, ks qtrgs fks dmwv cr ssfbhhimo hcdpsbf. Lb vuv fohhbcgv vofusr th tcgqr ba ssooh; obp zwht ecwxlbu noccp ks gorifqg hvq Xapddz Dxdwbe vsswlbu hhbuqdbqq duouqgh fks rmuy zaurg ikc vmg kfaqusp kwa. Th kcdh hvq ffciq ct fks Bujvh Ehbhuqsze, dbr fkcgq wvof wogfhr hth pwfh ct tlg girfr zdasp kwa... fks Rara Gxdmsd"
-
-# AMBROISE THOMAS: key = ambroisethomas, keyLength = 14 DOESN'T WORK
-# ciphertext = "DAZFI SFSPA VQLSN PXYSZ WXALC DAFGQ UISMT PHZGA MKTTF TCCFX KFCRG GLPFE TZMMM ZOZDE ADWVZ WMWKV GQSOH QSVHP WFKLS LEASE PWHMJ EGKPU RVSXJ XVBWV POSDE TEQTX OBZIK WCXLW NUOVJ MJCLL OEOFA ZENVM JILOW ZEKAZ EJAQD ILSWW ESGUG KTZGQ ZVRMN WTQSE OTKTK PBSTA MQVER MJEGL JQRTL GFJYG SPTZP GTACM OECBX SESCI YGUFP KVILL TWDKS ZODFW FWEAA PQTFS TQIRG MPMEL RYELH QSVWB AWMOS DELHM UZGPG YEKZU KWTAM ZJMLS EVJQT GLAWV OVVXH KWQIL IEUYS ZWXAH HUSZO GMUZQ CIMVZ UVWIF JJHPW VXFSE TZEDF"
-# key = UNITEDSTATES, keyLength = 12
-# ciphertext = "QRBAI UWYOK ILBRZ XTUWL EGXSN VDXWR XMHXY FCGMW WWSME LSXUZ MKMFS BNZIF YEIEG RFZRX WKUFA XQEDX DTTHY NTBRJ LHTAI KOCZX QHBND ZIGZG PXARJ EDYSJ NUMKI FLBTN HWISW NVLFM EGXAI AAWSL FMHXR SGRIG HEQTU MLGLV BRSIL AEZSG XCMHT OWHFM LWMRK HPRFB ELWGF RUGPB HNBEM KBNVW HHUEA KILBN BMLHK XUGML YQKHP RFBEL EJYNV WSIJB GAXGO TPMXR TXFKI WUALB RGWIE GHWHG AMEWW LTAEL NUMRE UWTBL SDPRL YVRET LEEDF ROBEQ UXTHX ZYOZB XLKAC KSOHN VWXKS MAEPH IYQMM FSECH RFYPB BSQTX TPIWH GPXQD FWTAI KNNBX SIYKE TXTLV BTMQA LAGHG OTPMX RTXTH XSFYG WMVKH LOIVU ALMLD LTSYV WYNVW MQVXP XRVYA BLXDL XSMLW SUIOI IMELI SOYEB HPHNR WTVUI AKEYG WIETG WWBVM VDUMA EPAUA KXWHK MAUPA MUKHQ PWKCX EFXGW WSDDE OMLWL NKMWD FWTAM FAFEA MFZBN WIHYA LXRWK MAMIK GNGHJ UAZHM HGUAL YSULA ELYHJ BZMSI LAILH WWYIK EWAHN PMLBN NBVPJ XLBEF WRWGX KWIRH XWWGQ HRRXW IOMFY CZHZL VXNVI OYZCM YDDEY IPWXT MMSHS VHHXZ YEWNV OAOEL SMLSW KXXFX STRVI HZLEF JXDAS FIE"
-
-# key = SUMMER, keyLength = 12
-# ciphertext = "FIIFL VZOZS VPDCA ZVFSL EMRUL BQISC XVQTS NDMFT IDGIZ ILZDM FFLVZ YMHCG DIGSL DSHEZ SIWMM XPNAN TIIRJ SFMWB XIDPS EWHAI XYWQM EXVVV DMRUK XASPF OQTUP JLNTQ WTJYQ OLFOF EOVVW WTURX DIGPT LLMFT INJYF OLKZU FXMVK CZISV AHDQQ VEVDM RTWIR MWYJI GPRFO CFUWK ZYFUQ VGZZU KYLNT MXKZY SDEMW MMXPX SJUZK NAXQQ ZVJSA ZICWN ERSIL BTUWJ HLUFI ZFNTQ GYMLO TARQJ MFLJL ISXMU WUZPA VXUUD MVKNT MXUGL GZFPL BQFVZ HFQTI TSNQE XVSGR DSDLB QBVVK YZOIF XNTQW LFZAX PFOCZ SHRJE ZQWJD CWQEU JYMYR FOUDQ JIGFU ORFLU YAYJW MTMPC VCEFY ITNTU WYSFX AAUZI GEIZS GEQRK OCFTF IGIYN IWGLQ FSJOY QBXYW XGEXS WBUZH KZYPA SI"
-# key = ratratratrat, keyLength = 12 *DOESN'T WORK
-# ciphertext = "VNZZNXVRBEGBJAZIETKPKFFXJSBFNMYEKVILKHXJAMZSYRCMZOGFFPRTVYIGXAYZGFVNMFFMYEBDAZZNTKIHEEFVRZVTAIONXHMYETZDHWSVZEGTEMFAICAGFNIRPXITAVNBKMHMELKOKVAEZSTKIHEIGJTHEEHIMXKAEFRXEEKXYMYEGZTUIIGXSAFMXJTHDEGFRPFMXETAVNBKEEVVTKELKHXJTTEDTIDHWLBMIGXAGUAWUSMFTAVCHDFHITLFFEZFXKHBJILKHXVNZZNXVRLYIZYPKZVBCEZVHXIBXITAFOOVR"
 
 */

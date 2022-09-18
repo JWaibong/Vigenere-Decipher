@@ -42,16 +42,19 @@ pub fn decode(ciphertext: &str, keyphrase: &mut KeyPhrase) -> String {
 }
 
 
-
+    // calculates the log probabilities for some set of ngrams (in this case, the quadgrams in english_quadgrams.txt)
+    // Ngram::new(), Ngram::compute_score() are based off of code in python file from
+    // http://practicalcryptography.com/cryptanalysis/stochastic-searching/cryptanalysis-vigenere-cipher-part-2/
+    // http://practicalcryptography.com/media/cryptanalysis/files/ngram_score_1.py
+    // CITED MULTIPLE TIMES BECAUSE THIS CODE IS THE MOST SIMILAR SNIPPETS I USED
 pub struct Ngram {
     ngram_map: HashMap<String, f64>,
     len: usize,
     floor: f64,
 }
-
 impl Ngram {
-    // calculates the log probabilities for some set of ngrams (in this case, the quadgrams in english_quadgrams.txt)
-    // Ngram::new(), Ngram::compute_score() are based off of code in python file from http://practicalcryptography.com/media/cryptanalysis/files/ngram_score_1.py
+
+    // http://practicalcryptography.com/media/cryptanalysis/files/ngram_score_1.py
     pub fn new(file: File) -> Ngram {
         let mut counts: HashMap<String,usize> = HashMap::new();
         let mut buf = String::with_capacity(100);
@@ -79,6 +82,7 @@ impl Ngram {
 
         for (k,v) in counts {
             ngram_map.insert(k, f64::log10( v as f64 / total_chars as f64));
+            // map an ngram to the log of its frequency
         }
 
         Ngram {
@@ -88,6 +92,7 @@ impl Ngram {
         }
     }
 
+    // http://practicalcryptography.com/media/cryptanalysis/files/ngram_score_1.py
     pub fn compute_score(&self, ciphertext: &str) -> f64 {
         let mut score = 0.0;
 

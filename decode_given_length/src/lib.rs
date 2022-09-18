@@ -26,6 +26,7 @@ pub fn decode_given_length(ciphertext: &str, key_length: usize, buckets: Vec<Has
 }
 
 
+// http://practicalcryptography.com/cryptanalysis/text-characterisation/chi-squared-statistic/
 pub fn find_key(buckets: &Vec<HashMap<char, usize>>) -> String {
     let mut key = String::with_capacity(100); // something default
     

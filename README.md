@@ -11,8 +11,12 @@ https://www.dcode.fr/index-coincidence
 http://practicalcryptography.com/cryptanalysis/stochastic-searching/cryptanalysis-vigenere-cipher/
 http://practicalcryptography.com/cryptanalysis/text-characterisation/chi-squared-statistic/
 http://practicalcryptography.com/media/cryptanalysis/files/ngram_score_1.py
+http://practicalcryptography.com/cryptanalysis/text-characterisation/index-coincidence/
 
 https://doc.rust-lang.org/rust-by-example/std_misc/file/read_lines.html
 https://randomwordgenerator.com/paragraph.php
 
+https://pages.mtu.edu/~shene/NSF-4/Tutorial/VIG/Vig-Examples.html
+
+http://www.math.stonybrook.edu/~scott/blair/Example_2_Vigenere.html
 https://pages.mtu.edu/~shene/NSF-4/Tutorial/VIG/Vig-Examples.html

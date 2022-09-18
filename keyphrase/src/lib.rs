@@ -44,7 +44,7 @@ impl KeyPhrase {
 
 }
 
-
+// group a ciphertext into key_length buckets
 pub fn group_ciphertext(ciphertext: &str, key_length: usize) -> Vec<HashMap<char, usize>> {
     let mut buckets: Vec<HashMap<char, usize>> = Vec::with_capacity(key_length);
     for _ in 0..key_length {
@@ -75,6 +75,9 @@ pub fn group_ciphertext(ciphertext: &str, key_length: usize) -> Vec<HashMap<char
     buckets
 }
 
+
+// formula from 
+// http://practicalcryptography.com/cryptanalysis/text-characterisation/index-coincidence/
 pub fn calculate_ioc(bucket: &HashMap<char, usize>) -> f64 {
     let mut numerator: usize = 0;
     let mut denominator: usize = 0;
@@ -97,6 +100,8 @@ pub fn calculate_ioc(bucket: &HashMap<char, usize>) -> f64 {
     ret
 }
 
+// formula from 
+// http://practicalcryptography.com/cryptanalysis/text-characterisation/chi-squared-statistic/
 pub fn calculate_chi_squared(bucket: &HashMap<char, usize>, len: usize) -> f64 {
     let mut sum: f64 = 0.0;
 
@@ -105,7 +110,7 @@ pub fn calculate_chi_squared(bucket: &HashMap<char, usize>, len: usize) -> f64 {
         if let Some(actual_count) = bucket.get(&(c as char)) {
             let expected_count: f64 = len as f64 * CHI_SQUARED_ENGLISH_EXPECTED_FREQ[i]; // denominator
             let numerator: f64 = (*actual_count as f64 - expected_count) * (*actual_count as f64 - expected_count);
-            // eprintln!("{}: {}, expected = {}", c as char, *actual_count, expected_count);
+            //eprintln!("{}: {}, expected = {}", c as char, *actual_count, expected_count);
             let frac = numerator / expected_count;
             sum += frac;
         }

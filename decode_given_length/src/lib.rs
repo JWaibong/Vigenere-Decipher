@@ -12,12 +12,15 @@ pub fn decode_given_length(ciphertext: &str, key_length: usize, buckets: Vec<Has
 
     
     let f = File::open("../english_quadgrams.txt").unwrap();
+    // citing here again for what an ngram is and what source code I used.
+    //  http://practicalcryptography.com/media/cryptanalysis/files/ngram_score_1.py
+    //  http://practicalcryptography.com/cryptanalysis/stochastic-searching/cryptanalysis-vigenere-cipher-part-2/
     let ngram = Ngram::new(f);
     
     let mut stripped_ciphertext: String = String::from(ciphertext);
     stripped_ciphertext.retain(|c| c.is_alphabetic());
     stripped_ciphertext.make_ascii_uppercase();
-    
+
     let new_key = ngram.generate_key_from_parent(new_key, stripped_ciphertext);
     
     let copy_key = String::from(new_key.as_str());

@@ -168,32 +168,3 @@ impl Ngram {
         }
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use std::fs::File;
-
-    use crate::Ngram;
-
-    #[test]
-    fn ngram_compute_score_works() {
-        //tested against python code with same cipher text
-        let f = File::open("../english_quadgrams.txt").unwrap();
-        let ngram = Ngram::new(f);
-
-        let mut ciphertext = String::from("Frank knew there was a correct time and place to reveal his secret and this wasn't it. The issue was that the secret might be revealed despite his best attempt to keep it from coming out. At this point, it was out of his control and completely dependant on those around him who also knew the secret. They wouldn't purposely reveal it, or at least he believed that, but they could easily inadvertently expose it. It was going to be a long hour as he nervously eyed everyone around the table hoping they would keep their mouths shut.
-        He was an expert but not in a discipline that anyone could fully appreciate. He knew how to hold the cone just right so that the soft server ice-cream fell into it at the precise angle to form a perfect cone each and every time. It had taken years to perfect and he could now do it without even putting any thought behind it. Nobody seemed to fully understand the beauty of this accomplishment except for the new worker who watched in amazement.
-        It really didn't matter what they did to him. He's already made up his mind. Whatever came his way, he was prepared for the consequences. He knew in his heart that the sacrifice he made was done with love and not hate no matter how others decided to spin it.");
-        ciphertext.retain(|c| c.is_alphabetic()); // delete all non alphabetic characters
-        ciphertext.make_ascii_uppercase();
-        assert_eq!(-4052.0636388220714, ngram.compute_score(&ciphertext));
-
-
-        let mut ciphertext = String::from("Rvtuy hlfa ggiei iel h qlpsips xvqq egk diydi gn vrzqee owp qfgedx nrp xapg tytr'g hx. Glq mlzib ubw ggeg xti llqocu qvflg fq vxcsxjfh qdwcmfi apg yctx nsxrqbx mv ybcq mg evbq osfpbd mvx. Ns xume thpbq, gu anr shx aj apg zmoxenp nrp ghtdicuiyx hrtqrwhbq mo xunwr edsnur egn aun eywa oglk qff wrbvrx. Flxf klsmha's thvbsllzv pfzrzp vx, av ta zbytx ud frpuiolr qfbx, otx glqc vviib fefhpl mzewcsorfrgkc rbbsll wq. Gu anr kbmzk mv pb y msaf lbyd el os kcszbtwyc qcxk sscscbmi nvaygk hec ueoki usbmgn hecz abtpq oqii avbgs qbtxuw elna.
-        Vb ubw nm iktqvm iiq lpx vm e qmegbwzflf xuzx nrksgl qlsmh stpyc mtiyszgbxr. Gi xrqa avk qm isyc xui osgl xrqu vvflg wa xahh qff wbex fidzxy wzc-dvrzq sixp buhl gu eg slr tdivpgb yokyd xb javf h dbpgips gbrq itjv xle iidvl xuqx. Ph eye xnjia cqekz hl nfvsdgg ezh al qlsmh ana qs ux pphemvx ruia tgxmpbd yoc ggshktx ulvfle mg. Msospc llsjce xb eyypk ygksoqueac xui nitbhv mg xuhw ngosfwzfqiqrmx rboiia tlp ulr mij aavdlf tfp ansguip mg haxxfqrmx.
-        Vx ditszv bjha's qnxfik dvxr ulrx hvh fs apa. Ec't eyqinhk qtks rn imf lmah. Iltasscs gnli ume atf, vb ubw cqicediw mco rii pnrficyxuqbq. Ii xmij mz lbz vbysx ggeg xti lhqoggmpd lr qmhx dop bprr vmgl xsol okb osg gegi zs fhhqcs lbv sglqvl kszgeiq ss ftur ba.");
-        ciphertext.retain(|c| c.is_alphabetic());
-        ciphertext.make_ascii_uppercase();
-        assert_eq!(-8122.3612546735985 ,ngram.compute_score(&ciphertext));
-    }
-}

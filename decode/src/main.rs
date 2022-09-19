@@ -138,13 +138,24 @@ mod tests {
         assert_eq!(plaintext, "The lone lamp post of the one-street town flickered, not quite dead but definitely on its way out. Suitcase by her side, she paid no heed to the light, the street or the town. A car was coming down the street and with her arm outstretched and thumb in the air, she had a plan.");
     } 
     #[test]
-    fn security() {
+    fn an() {
         // key is SECURITY
+        let ciphertext = String::from("Tue sapt ghnt eecentvnt lrtgees paa br fbuad zennf tjo ghvnts: righrr n snmr srqheacr os lrtgee os tue clniatrxg if ceyctrd jigh ghr snmr pnrg os tue xel, evtuee dvfseeeat fedurnpef lrtgees nrr ceyctrd jigh qisfrrrng pnrgs bf ghr kry oug tuel eadf wvtu tue faze prlpgeq lrtgees. Ghvs fepoad cofsvbvlvtl if pboell peooaolr.");
+        let (key, plaintext) = decode(&ciphertext);
+        assert_eq!(key, "AN");
+        assert_eq!(plaintext, "The fact that repeating letters can be found means two things: either a same sequence of letter of the plaintext is crypted with the same part of the key, either different sequences letters are crypted with different parts of the key but they ends with the same crypted letters. This second possibility is poorly probable.");
+    }
+
+    #[test]
+    fn security() {
         let ciphertext = String::from("Llg zrkm rzev lvxxylmpa cmmrwvu wrv uc xswhu uxyfw vqf bagfku: yzbacj e uudm lciyghtm hd divnvz hd llg jcibllizn za vpqtvyu ebrz xjy jifc hetn fn mfw ogs, vqmfwv fcwnxpwrv mvyncfggm cmmrwvu uim vpqtvyu ebrz hkzwmkcfx ruibl mx xjy bmr zmx vbvg xlvw yckp mfw wcgv kkwhxgx cmmrwvu. Nyql qwgqhu xhqkmdccqmw aw rifzew hvqvrjec.");
         let (key, plaintext) = decode(&ciphertext);
         assert_eq!(key, "SECURITY");
+
         assert_eq!(plaintext, "The fact that repeating letters can be found means two things: either a same sequence of letter of the plaintext is crypted with the same part of the key, either different sequences letters are crypted with different parts of the key but they ends with the same crypted letters. This second possibility is poorly probable.");
+
     }
+
     #[test]
     fn summer() {
         // key is SUMMER

@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fs::File};
+use std::{collections::HashMap, fs::File,};
 use keyphrase::{KeyPhrase, calculate_chi_squared};
 use decode_given_key::{decode, Ngram};
 
@@ -11,7 +11,11 @@ pub fn decode_given_length(ciphertext: &str, key_length: usize, buckets: Vec<Has
     let new_key = find_key(&buckets);
 
     
+    // specify absolue path: /home/jwaibong/cse360/hw1/decode_given_length/src/english_quadgrams.txt
+    // when running cargo test
     let f = File::open("decode_given_length/src/english_quadgrams.txt").unwrap();
+    
+
     // citing here again for what an ngram is and what source code I used.
     //  http://practicalcryptography.com/media/cryptanalysis/files/ngram_score_1.py
     //  http://practicalcryptography.com/cryptanalysis/stochastic-searching/cryptanalysis-vigenere-cipher-part-2/
